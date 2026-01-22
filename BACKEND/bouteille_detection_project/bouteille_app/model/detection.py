@@ -1,19 +1,23 @@
+
 from ultralytics import YOLO
-
-##import serial
-import serial
-import time
+from django.apps import apps
 import os
+##import serial
+#import serial
+import time
 
 
+# récupérer le modèle depuis AppConfig
+model = apps.get_app_config("bouteille_app").yolo_model
 
+#arduino = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+#time.sleep(2)
 
-arduino = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
-time.sleep(2)
-
+"""
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # On pointe vers le fichier best.pt qui est dans ce MEME dossier
 model_path = os.path.join(BASE_DIR, "best_openvino_model")
+
 
 # On charge le modèle avec le chemin complet
 try:
@@ -22,12 +26,20 @@ try:
 except Exception as e:
     print(f"❌ Erreur lors du chargement du modèle : {e}")
 
+    """
+
+
+
+
+
+
+
 def process_frame(image_path):
-    results = model.predict(image_path, imgsz=640, conf=0.5, device="cpu", verbose=False)[0]
+    results = model.predict(image_path, imgsz=480, conf=0.6, device="cpu", verbose=False)[0]
     
 
     detections = []
-    detected_plastic = False
+    #detected_plastic = False
 
     for box in results.boxes:
         cls = int(box.cls[0])
@@ -42,14 +54,14 @@ def process_frame(image_path):
             "box": [x1, y1, x2, y2]
         })
 
-        if label == "bouteille plastique":   # adapte au nom de ta classe
-            detected_plastic = True
+        #if label == "bouteille plastique":   # adapte au nom de ta classe
+        #   detected_plastic = True
 
-    if detected_plastic:
-        arduino.write(b'OPEN\n')
+    #if detected_plastic:
+     #   arduino.write(b'OPEN\n')
 
     return {
-        "detected": detected_plastic,
+       # "detected": detected_plastic,
         "detections": detections
     }
 

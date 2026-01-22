@@ -29,6 +29,7 @@ class DetectorConsumer(AsyncWebsocketConsumer):
         img_bytes = base64.b64decode(image_base64)
         nparr = np.frombuffer(img_bytes, np.uint8)
         frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        
 
         # 4️⃣ Appel de YOLO (async pour ne pas bloquer)
         result = await sync_to_async(process_frame)(frame)

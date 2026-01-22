@@ -18,4 +18,4 @@ try:
 except Exception as e:
     print(f"❌ Erreur lors du chargement du modèle : {e}")
     
-model.export(format="openvino", imgsz=640)
+model.export(format="openvino", imgsz=480)
